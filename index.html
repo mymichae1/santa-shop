@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Santa Shop</title>
+  <!-- FEATURE 1: Poppins Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&display=swap" rel="stylesheet"/>
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@3.7.0/fonts/remixicon.css" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+<!-- ============================================================ SNOW CANVAS ============================================================ -->
+<canvas id="snow-canvas"></canvas>
+
+<!-- ============================================================ AUDIO BUTTON ============================================================ -->
+<audio id="bg-audio" loop src="Music/Silent Night.mp3"></audio>
+<button id="audio-btn" title="Toggle Musik">🔇</button>
+
+<!-- ============================================================ TOAST ============================================================ -->
+<div class="toast" id="toast"><i class="ri-check-line"></i><span id="toast-msg"></span></div>
+
+<!-- ============================================================
+     HEADER / NAVBAR
+============================================================ -->
+<header class="header" id="beranda">
+  <nav>
+    <div class="nav__logo">
+      <img src="assets/logo-white.png" alt="Santa Shop"/>
+    </div>
+
+    <!-- FEATURE 20: Full nav links -->
+    <ul class="nav__links">
+      <li><a href="#beranda">Beranda</a></li>
+      <li><a href="#all-product">All Product</a></li>
+      <li><a href="#" onclick="openModal('gift-overlay')"> Gift</a></li>
+      <li><a href="#" onclick="openModal('location-overlay')"> Lokasi</a></li>
+      <li><a href="#kontak">Kontak</a></li>
+    </ul>
+
+    <div class="nav__right">
+      <!-- FEATURE 2: Search -->
+      <div class="nav__search">
+        <i class="ri-search-line"></i>
+        <input type="text" id="nav-search-input" placeholder="Cari produk..." oninput="liveSearch(this.value)"/>
+      </div>
+
+      <!-- Cart -->
+      <button class="nav__icon-btn" onclick="openCartModal()" title="Keranjang">
+        <i class="ri-shopping-basket-line"></i>
+        <span class="cart-badge" id="cart-badge">0</span>
+      </button>
+
+      <!-- FEATURE 7: Buy This in navbar -->
+      <button class="nav__buy-btn" onclick="openCartModal()">
+        <i class="ri-shopping-cart-line"></i>
+        <span>Beli Sekarang</span>
+      </button>
+
+      <!-- FEATURE 10: Login -->
+      <button class="nav__login-btn" onclick="openModal('auth-overlay')">
+        <i class="ri-user-line"></i> Login
+      </button>
+
+      <!-- Hamburger -->
+      <button class="hamburger" onclick="toggleMobileMenu()">
+        <i class="ri-menu-line"></i>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" id="mobile-menu">
+    <div class="mob-search">
+      <i class="ri-search-line"></i>
+      <input type="text" placeholder="Cari produk..." oninput="liveSearch(this.value)"/>
+    </div>
+    <a href="#beranda" onclick="closeMobileMenu()">Beranda</a>
+    <a href="#all-product" onclick="closeMobileMenu()">All Product</a>
+    <a href="#" onclick="closeMobileMenu();openModal('gift-overlay')"> Gift</a>
+    <a href="#" onclick="closeMobileMenu();openModal('location-overlay')"> Lokasi</a>
+    <a href="#kontak" onclick="closeMobileMenu()">Kontak</a>
+    <a href="#" onclick="closeMobileMenu();openModal('auth-overlay')">Login / Daftar</a>
+  </div>
+
+  <!-- Header Content -->
+  <div class="section__container header__container">
+    <img src="assets/header.png" alt="Santa Shop Header" class="reveal"/>
+    <div class="header__content reveal from-right">
+      <h4>Mulai perayaanmu<br/>bersama kami...</h4>
+      <p>Pohon Natal yang mudah dipasang ini akan membuat anak-anak dan rekan kantormu senang mendekorasinya.</p>
+    </div>
+  </div>
+</header>
+
+<!-- ============================================================
+     FESTIVE SECTION
+============================================================ -->
+<section class="section__container festive__container">
+  <div class="festive__image reveal from-left">
+    <div class="bg"></div>
+    <img src="assets/festive.png" alt="festive"/>
+  </div>
+  <div class="festive__content">
+    <h2 class="section__header reveal">Jelajahi koleksi <span>festive</span> kami yang menakjubkan</h2>
+    <p class="section__description reveal">
+      HO HO HO! Musim paling meriah telah tiba. Hias rumah atau kantormu dengan koleksi pernak-pernik Natal kami yang beragam. Jika ingin lebih seru, eksplorasi semua kategori produk kami.
+    </p>
+    <div class="festive__btn reveal">
+      <button class="btn" onclick="document.getElementById('all-product').scrollIntoView({behavior:'smooth'})">
+        <i class="ri-compass-3-line"></i> Jelajahi Koleksi
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     CATEGORY SECTION
+============================================================ -->
+<section class="category">
+  <div class="section__container category__container">
+    <img src="assets/bg-png.png" alt="" class="category__bg"/>
+    <h2 class="section__header reveal">Belanja berdasarkan <span>Kategori</span> Festive</h2>
+    <p class="section__description reveal">
+      Semua kategori kami dibuat dari bahan terbaik untuk menciptakan efek Natal yang memukau.
+    </p>
+    <div class="category__flex">
+      <div class="category__card reveal" onclick="filterByCategory('Mainan')">
+        <img src="assets/category-1.png" alt="Mainan"/>
+        <h4>Mainan</h4>
+      </div>
+      <div class="category__card reveal" onclick="filterByCategory('Hadiah')">
+        <img src="assets/category-2.png" alt="Hadiah"/>
+        <h4>Hadiah</h4>
+      </div>
+      <div class="category__card reveal" onclick="filterByCategory('Dekorasi')">
+        <img src="assets/category-3.png" alt="Dekorasi"/>
+        <h4>Dekorasi</h4>
+      </div>
+      <div class="category__card reveal" onclick="filterByCategory('Makanan')">
+        <img src="assets/category-4.png" alt="Makanan"/>
+        <h4>Makanan</h4>
+      </div>
+      <div class="category__card reveal" onclick="filterByCategory('Pakaian')">
+        <img src="assets/category-5.png" alt="Pakaian"/>
+        <h4>Pakaian</h4>
+      </div>
+      <div class="category__card reveal" onclick="filterByCategory('Kue')">
+        <img src="assets/category-6.png" alt="Kue"/>
+        <h4>Kue</h4>
+      </div>
+      <div class="category__card reveal" onclick="filterByCategory('Santa')">
+        <img src="assets/category-7.png" alt="Santa"/>
+        <h4>Santa</h4>
+      </div>
+      <div class="category__card reveal" onclick="filterByCategory('')">
+        <img src="assets/category-8.png" alt="Lainnya"/>
+        <h4>Lainnya</h4>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     FEATURE 18: ALL PRODUCTS
+============================================================ -->
+<section class="allproducts" id="all-product">
+  <div class="allproducts__inner">
+    <div class="allproducts__header reveal">
+      <h2 class="section__header">Semua <span>Produk</span></h2>
+      <p class="section__description">Pilih produk favoritmu dan tambahkan ke keranjang!</p>
+    </div>
+    <div class="allproducts__search reveal">
+      <i class="ri-search-line"></i>
+      <input type="text" id="prod-search" placeholder="Cari nama produk..." oninput="liveSearch(this.value)"/>
+    </div>
+    <div class="allproducts__grid" id="products-grid">
+      <!-- Rendered by JS -->
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SHOPPING CHECKLIST
+============================================================ -->
+<section class="shopping__container">
+  <div class="shopping__header">
+    <h2 class="section__header reveal">Lengkapi daftar <span>belanja</span> Natalmu</h2>
+    <p class="section__description reveal">
+      Mudah terlupa semua perlengkapan ekstra yang kamu butuhkan sepanjang Natal — ini daftar rekomendasi kami!
+    </p>
+    <div class="shopping__grid" id="shopping-grid">
+      <!-- Rendered by JS -->
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     EXPLORE SECTION
+============================================================ -->
+<section class="section__container explore__container">
+  <div class="explore__image reveal from-left">
+    <div class="bg"></div>
+    <img src="assets/explore.png" alt="explore"/>
+  </div>
+  <div class="explore__content">
+    <h2 class="section__header reveal">Jelajahi koleksi <span>dekorasi</span> musim ini</h2>
+    <p class="section__description reveal">
+      Perayaan Natal tidak lengkap tanpa wreath liburan yang dihias indah dengan tinsels dan bunga glitter berkilau.
+    </p>
+    <div class="explore__btn reveal">
+      <button class="btn" onclick="document.getElementById('all-product').scrollIntoView({behavior:'smooth'})">
+        <i class="ri-palette-line"></i> Jelajahi Dekorasi
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     FEATURE 13: REVIEWS
+============================================================ -->
+<section class="reviews">
+  <div class="reviews__inner">
+    <div class="reviews__header reveal">
+      <h2 class="section__header">Apa Kata <span>Pelanggan</span> Kami</h2>
+      <p class="section__description">Ribuan pelanggan puas berbelanja di Santa Shop — ini cerita mereka!</p>
+    </div>
+    <div class="reviews__grid" id="reviews-grid"><!-- Rendered by JS --></div>
+
+    <!-- Add review form -->
+    <div class="review__form-box reveal">
+      <h3> Tulis Ulasanmu</h3>
+      <div class="star-picker" id="star-picker">
+        <i class="ri-star-fill" data-v="1"></i>
+        <i class="ri-star-fill" data-v="2"></i>
+        <i class="ri-star-fill" data-v="3"></i>
+        <i class="ri-star-fill" data-v="4"></i>
+        <i class="ri-star-fill" data-v="5"></i>
+      </div>
+      <input  class="form__field" id="rv-name" placeholder="Nama kamu"/>
+      <textarea class="form__field" id="rv-text" placeholder="Ceritakan pengalamanmu berbelanja di Santa Shop..."></textarea>
+      <button class="review__submit-btn" onclick="submitReview()">Kirim Ulasan</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     COUPON SECTION
+============================================================ -->
+<section class="coupon">
+  <div class="section__container coupon__container">
+    <h2 class="section__header reveal">Bergabung sekarang &amp; menangkan <span>kupon</span> menarik</h2>
+    <form class="coupon__form" onsubmit="joinCoupon(event)">
+      <input type="email" placeholder="Masukkan Email Kamu" required/>
+      <button class="btn" type="submit"><i class="ri-arrow-right-line"></i></button>
+    </form>
+  </div>
+</section>
+
+<!-- ============================================================
+     FOOTER — FEATURE 9 & 16
+============================================================ -->
+<footer id="kontak">
+  <div class="footer__main">
+    <div class="footer__brand reveal">
+      <img class="footer__brand-logo" src="assets/logo-red.png" alt="Santa Shop"/>
+      <p>Santa Shop adalah platform belanja Natal terkonsep yang melayani Asia Selatan dan sebagian wilayah Amerika. Kami menghadirkan kebahagiaan Natal ke pintu rumahmu.</p>
+      <div class="footer__socials">
+        <a href="#"><i class="ri-facebook-fill"></i></a>
+        <a href="#"><i class="ri-instagram-line"></i></a>
+        <a href="#"><i class="ri-twitter-fill"></i></a>
+        <a href="#"><i class="ri-tiktok-line"></i></a>
+      </div>
+    </div>
+    <div class="footer__col reveal">
+      <h4>Navigasi</h4>
+      <ul>
+        <li><a href="#beranda">Beranda</a></li>
+        <li><a href="#all-product">All Product</a></li>
+        <li><a href="#" onclick="openModal('gift-overlay')">Kirim Hadiah</a></li>
+        <li><a href="#" onclick="openModal('location-overlay')">Lokasi Toko</a></li>
+      </ul>
+    </div>
+    <div class="footer__col reveal">
+      <h4>Layanan</h4>
+      <ul>
+        <li><a href="#" onclick="openModal('tracking-overlay')">Lacak Pesanan</a></li>
+        <li><a href="#" onclick="openModal('auth-overlay')">Login / Daftar</a></li>
+        <li><a href="#">FAQ</a></li>
+        <li><a href="#">Kebijakan Privasi</a></li>
+      </ul>
+    </div>
+    <div class="footer__col reveal">
+      <h4>Kontak Kantor</h4>
+      <ul>
+        <li><a href="mailto:hello@santashop.id">hello@santashop.id</a></li>
+        <li><a href="tel:+62215551234">+62 21 555-1234</a></li>
+        <li><a href="#">Jl. Santa Claus No. 25<br/>Jakarta Pusat, 10350</a></li>
+        <li><a href="#">WhatsApp Kami</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer__bar">
+    <!-- FEATURE 9: Updated copyright -->
+    <span>Copyright © 2026 Santa Shop. All rights reserved.</span>
+    <span>
+      <a href="#" style="color:rgba(255,255,255,.4);margin-right:16px;">Syarat &amp; Ketentuan</a>
+      <a href="#" style="color:rgba(255,255,255,.4);">Kebijakan Privasi</a>
+    </span>
+  </div>
+</footer>
+
+<!-- ================================================================
+     MODALS
+================================================================ -->
+
+<!-- AUTH MODAL — FEATURE 10 -->
+<div class="overlay" id="auth-overlay">
+  <div class="modal">
+    <button class="modal__close" onclick="closeModal('auth-overlay')"><i class="ri-close-line"></i></button>
+    <h2>👤 Akun Saya</h2>
+    <div class="auth__tabs">
+      <button class="auth__tab active" onclick="switchAuth('login')">Masuk</button>
+      <button class="auth__tab" onclick="switchAuth('register')">Daftar</button>
+    </div>
+    <div class="auth__panel active" id="login-panel">
+      <div>
+        <label class="auth__label">Email</label>
+        <input class="form__field" id="login-email" type="email" placeholder="email@contoh.com"/>
+      </div>
+      <div>
+        <label class="auth__label">Password</label>
+        <input class="form__field" id="login-pass" type="password" placeholder="Password kamu"/>
+      </div>
+      <button class="auth__submit" onclick="doLogin()">Masuk</button>
+      <p class="auth__switch">Belum punya akun? <a onclick="switchAuth('register')">Daftar sekarang</a></p>
+    </div>
+    <div class="auth__panel" id="register-panel">
+      <div>
+        <label class="auth__label">Nama Lengkap</label>
+        <input class="form__field" id="reg-name" type="text" placeholder="Nama lengkap kamu"/>
+      </div>
+      <div>
+        <label class="auth__label">Email</label>
+        <input class="form__field" id="reg-email" type="email" placeholder="email@contoh.com"/>
+      </div>
+      <div>
+        <label class="auth__label">Password</label>
+        <input class="form__field" id="reg-pass" type="password" placeholder="Buat password (min. 6 karakter)"/>
+      </div>
+      <div>
+        <label class="auth__label">Konfirmasi Password</label>
+        <input class="form__field" id="reg-confirm" type="password" placeholder="Ulangi password"/>
+      </div>
+      <button class="auth__submit" onclick="doRegister()">Daftar Sekarang</button>
+      <p class="auth__switch">Sudah punya akun? <a onclick="switchAuth('login')">Masuk</a></p>
+    </div>
+  </div>
+</div>
+
+<!-- CART MODAL — FEATURE 8 -->
+<div class="overlay" id="cart-overlay">
+  <div class="modal cart-modal">
+    <button class="modal__close" onclick="closeModal('cart-overlay')"><i class="ri-close-line"></i></button>
+    <h2>🛒 Keranjang Belanja</h2>
+    <div id="cart-content"><!-- Rendered by JS --></div>
+  </div>
+</div>
+
+<!-- CHECKOUT MODAL — FEATURE 14 -->
+<div class="overlay" id="checkout-overlay">
+  <div class="modal checkout-modal">
+    <button class="modal__close" onclick="closeModal('checkout-overlay')"><i class="ri-close-line"></i></button>
+    <h2>💳 Checkout</h2>
+    <div class="checkout__steps">
+      <div class="checkout__step active" id="cs-tab-1">1. Alamat</div>
+      <div class="checkout__step" id="cs-tab-2">2. Pembayaran</div>
+      <div class="checkout__step" id="cs-tab-3">3. Konfirmasi</div>
+    </div>
+
+    <!-- Step 1: Address -->
+    <div class="checkout__panel active" id="cs-1">
+      <p style="font-size:.85rem;font-weight:600;color:var(--text-light);margin-bottom:1rem;">Alamat Pengiriman</p>
+      <input class="form__field" id="co-name"    placeholder="Nama penerima"/>
+      <input class="form__field" id="co-phone"   placeholder="Nomor telepon"/>
+      <input class="form__field" id="co-address" placeholder="Alamat lengkap"/>
+      <div class="form-grid-2">
+        <input class="form__field" id="co-city"  placeholder="Kota"/>
+        <input class="form__field" id="co-zip"   placeholder="Kode Pos"/>
+      </div>
+      <div class="checkout__nav">
+        <button class="btn" onclick="goStep(2)">Selanjutnya <i class="ri-arrow-right-line"></i></button>
+      </div>
+    </div>
+
+    <!-- Step 2: Payment -->
+    <div class="checkout__panel" id="cs-2">
+      <p style="font-size:.85rem;font-weight:600;color:var(--text-light);margin-bottom:.5rem;">Pilih Metode Pembayaran</p>
+      <div class="payment__methods">
+        <div class="payment__method" onclick="selectPayment(this,'Mandiri')"><i class="ri-bank-line"></i> Bank Mandiri</div>
+        <div class="payment__method" onclick="selectPayment(this,'BRI')"><i class="ri-bank-line"></i> Bank BRI</div>
+        <div class="payment__method" onclick="selectPayment(this,'BNI')"><i class="ri-bank-line"></i> Bank BNI</div>
+        <div class="payment__method" onclick="selectPayment(this,'BCA')"><i class="ri-bank-line"></i> Bank BCA</div>
+        <div class="payment__method" onclick="selectPayment(this,'QRIS')"><i class="ri-qr-code-line"></i> QRIS</div>
+      </div>
+      <div class="payment__detail-box" id="pay-detail">
+        <p style="font-size:.85rem;color:var(--text-light)">Nomor Rekening:</p>
+        <p id="pay-account" style="font-size:1.1rem;font-weight:800;color:var(--text-dark);margin-top:4px;"></p>
+        <p id="pay-amount"  style="font-size:.9rem;color:var(--primary);margin-top:4px;"></p>
+      </div>
+      <div class="checkout__nav">
+        <button class="btn-outline" onclick="goStep(1)"><i class="ri-arrow-left-line"></i> Kembali</button>
+        <button class="btn" onclick="goStep(3)">Selanjutnya <i class="ri-arrow-right-line"></i></button>
+      </div>
+    </div>
+
+    <!-- Step 3: Confirmation -->
+    <div class="checkout__panel" id="cs-3">
+      <div class="order-summary" id="order-summary"></div>
+      <div class="checkout__nav">
+        <button class="btn-outline" onclick="goStep(2)"><i class="ri-arrow-left-line"></i> Kembali</button>
+        <button class="btn" style="background:#16a34a;" onclick="processPayment()"><i class="ri-check-line"></i> Bayar Sekarang</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SUCCESS MODAL -->
+<div class="overlay" id="success-overlay">
+  <div class="modal success-modal">
+    <button class="modal__close" onclick="closeModal('success-overlay')"><i class="ri-close-line"></i></button>
+    <div class="success__icon">🎉</div>
+    <p class="success__title">Pembayaran Berhasil!</p>
+    <p class="success__subtitle">Terima kasih telah berbelanja di Santa Shop! Pesananmu sedang diproses.</p>
+    <p class="success__order">No. Pesanan: <strong id="success-order-id">—</strong></p>
+    <div class="success__actions">
+      <button class="btn" onclick="closeModal('success-overlay');openModal('tracking-overlay')">
+        <i class="ri-map-pin-time-line"></i> Lacak Pesanan
+      </button>
+      <button class="btn-outline" onclick="closeModal('success-overlay')" style="border-radius:50px;padding:.65rem 1.5rem;">Tutup</button>
+    </div>
+  </div>
+</div>
+
+<!-- TRACKING MODAL — FEATURE 15 -->
+<div class="overlay" id="tracking-overlay">
+  <div class="modal tracking-modal">
+    <button class="modal__close" onclick="closeModal('tracking-overlay')"><i class="ri-close-line"></i></button>
+    <h2>📦 Lacak Pesanan</h2>
+    <div class="tracking-no-input">
+      <input class="form__field" id="tracking-input" placeholder="Masukkan No. Pesanan (contoh: SS-123456)" style="margin:0;"/>
+      <button onclick="trackOrder()">Lacak</button>
+    </div>
+    <div id="tracking-result">
+      <div class="tracking__timeline" id="tracking-timeline"><!-- Rendered by JS --></div>
+    </div>
+  </div>
+</div>
+
+<!-- GIFT MODAL — FEATURE 11 -->
+<div class="overlay" id="gift-overlay">
+  <div class="modal gift-modal">
+    <button class="modal__close" onclick="closeModal('gift-overlay')"><i class="ri-close-line"></i></button>
+    <h2>🎁 Kirim Hadiah ke Orang Tersayang</h2>
+    <p style="font-size:.88rem;color:var(--text-light);margin-bottom:1.25rem;line-height:1.7;">Isi alamat pengirim dan penerima untuk mengirimkan hadiah spesial di hari istimewa!</p>
+
+    <p style="font-size:.85rem;font-weight:700;color:var(--primary);margin-bottom:.75rem;">Informasi Pengirim</p>
+    <div class="form-grid-2">
+      <input class="form__field" id="g-from-name"  placeholder="Nama pengirim"/>
+      <input class="form__field" id="g-from-phone" placeholder="No. Telepon"/>
+    </div>
+    <input class="form__field" id="g-from-addr" placeholder="Alamat pengirim lengkap"/>
+    <div class="form-grid-2">
+      <input class="form__field" placeholder="Kota pengirim"/>
+      <input class="form__field" placeholder="Kode Pos"/>
+    </div>
+
+    <p style="font-size:.85rem;font-weight:700;color:var(--primary);margin:.75rem 0;">Informasi Penerima</p>
+    <div class="form-grid-2">
+      <input class="form__field" id="g-to-name"  placeholder="Nama penerima"/>
+      <input class="form__field" id="g-to-phone" placeholder="No. Telepon"/>
+    </div>
+    <input class="form__field" id="g-to-addr" placeholder="Alamat penerima lengkap"/>
+    <div class="form-grid-2">
+      <input class="form__field" placeholder="Kota penerima"/>
+      <input class="form__field" placeholder="Kode Pos"/>
+    </div>
+    <textarea class="form__field" id="g-message" placeholder="Pesan spesial untuk penerima 💌" rows="3"></textarea>
+    <button class="gift__send-btn" onclick="sendGift()">💝 Kirim Hadiah Sekarang</button>
+  </div>
+</div>
+
+<!-- LOCATION MODAL — FEATURE 12 -->
+<div class="overlay" id="location-overlay">
+  <div class="modal location-modal">
+    <button class="modal__close" onclick="closeModal('location-overlay')"><i class="ri-close-line"></i></button>
+    <h2>📍 Lokasi Toko Santa Shop</h2>
+    <p style="font-size:.88rem;color:var(--text-light);margin-bottom:1.25rem;">Kunjungi toko fisik kami di kota terdekatmu!</p>
+    <div class="store-card">
+      <div class="store-card__icon"><i class="ri-store-2-line"></i></div>
+      <div>
+        <div class="store-card__name">Santa Shop — Jakarta Pusat</div>
+        <div class="store-card__addr">Jl. Thamrin No. 25, Jakarta Pusat 10350<br/>Sen–Min: 09.00 – 21.00 WIB</div>
+        <span class="store-card__badge">● Buka</span>
+      </div>
+    </div>
+    <div class="store-card">
+      <div class="store-card__icon"><i class="ri-store-2-line"></i></div>
+      <div>
+        <div class="store-card__name">Santa Shop — Bandung</div>
+        <div class="store-card__addr">Jl. Riau No. 17, Bandung 40115<br/>Sen–Sab: 10.00 – 20.00 WIB</div>
+        <span class="store-card__badge">● Buka</span>
+      </div>
+    </div>
+    <div class="store-card">
+      <div class="store-card__icon"><i class="ri-store-2-line"></i></div>
+      <div>
+        <div class="store-card__name">Santa Shop — Surabaya</div>
+        <div class="store-card__addr">Jl. Pemuda No. 12, Surabaya 60271<br/>Tel–Min: 09.00 – 21.00 WIB</div>
+        <span class="store-card__badge">● Buka</span>
+      </div>
+    </div>
+    <div class="store-card">
+      <div class="store-card__icon"><i class="ri-store-2-line"></i></div>
+      <div>
+        <div class="store-card__name">Santa Shop — Yogyakarta</div>
+        <div class="store-card__addr">Jl. Malioboro No. 88, Yogyakarta 55122<br/>Setiap Hari: 08.00 – 22.00 WIB</div>
+        <span class="store-card__badge">● Buka</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
