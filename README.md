@@ -1,6 +1,6 @@
 # 🎄 Santa Shop — Christmas Online Store
 
-![Santa Shop Thumbnail](.thumbnail.png)
+(.thumbnail.png)
 
 ---
 
